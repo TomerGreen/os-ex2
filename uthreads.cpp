@@ -51,7 +51,7 @@ bool is_tid_valid(int tid)
  */
 int remove_from_ready_queue(int tid)
 {
-    for (int i=0; i<readyQueue.size(); i++)
+    for (unsigned int i=0; i<readyQueue.size(); i++)
     {
         if (readyQueue[i] == tid)
         {
@@ -93,12 +93,27 @@ void print_thread_status()
         {
             if (threads[i] != nullptr)
             {
-                std::cout << i << ": " << threads[i]->getState() << ", ";
+                std::cout << i << ":";
+                State state = threads[i]->getState();
+                switch(state)
+                {
+                    case(READY) :
+                        std::cout << "READY";
+                        break;
+                    case(RUNNING) :
+                        std::cout << "RUNNING";
+                        break;
+                    case(BLOCKED) :
+                        std::cout << "BLOCKED";
+                    default :
+                        break;
+                }
+                std::cout << ", ";
             }
         }
     std::cout << "}\n";
-    std::cout << "ready llist: {";
-    for(int i=0; i<readyQueue.size(); i++)
+    std::cout << "ready queue: {";
+    for(unsigned int i=0; i<readyQueue.size(); i++)
         {
             std::cout << readyQueue[i] << ", ";
         }
@@ -122,6 +137,7 @@ int uthread_init(int quantum_usecs)
     Thread* main_thread = new Thread(0);
     threads[0] = main_thread;
     main_thread->setState(RUNNING);
+    runningThread = 0;
     return SUCCESS_CODE;
 }
 

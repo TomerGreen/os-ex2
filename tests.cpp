@@ -47,6 +47,7 @@ int test_block_and_resume()
     uthread_terminate(2);
     print_thread_status();
     uthread_terminate(0);
+    return 0;
 }
 
 

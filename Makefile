@@ -1,2 +1,8 @@
-tests: tests.cpp Thread.cpp uthreads.cpp
-     g++ -std=c++11 -Wall -o tests
+SOURCE=tests.cpp thread.cpp uthreads.cpp
+
+
+tests: $(SOURCE)
+	g++ -std=c++11 -Wall $(SOURCE) -o tests
+
+tar:
+	tar -cvf ex2.tar general.h tests.cpp thread.cpp thread.h uthreads.cpp uthreads.h blackbox.h Makefile README

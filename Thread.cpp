@@ -1,4 +1,5 @@
 #include "thread.h"
+#include "blackbox.h"
 
 
 Thread::Thread(int id, void (*f)(void)): id(id), f(f)
