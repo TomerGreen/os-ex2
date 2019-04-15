@@ -4,6 +4,10 @@
 
 #include <iostream>
 #include <stdlib.h>
+#include <stdio.h>
+#include <setjmp.h>
+#include <signal.h>
+#include <unistd.h>
 #include <sys/time.h>
 
 

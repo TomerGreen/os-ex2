@@ -17,14 +17,24 @@ class Thread
         State state;
         void (*f)(void);
         char *stack;
-        sigjmp_buf context;
+        sigjmp_buf env;
 
     public:
 
         /**
-         * Constructor for the thread class.
+         * Constructor for a thread.
          */
         Thread(int id, void (*f)(void));
+
+        /**
+         * Constructor for the main thread.
+         */
+        Thread(int tid);
+
+        /**
+         * Destructor for a thread.
+         */
+        ~Thread();
 
         /**
          * Getter for ID.
@@ -47,9 +57,9 @@ class Thread
         char *getStack();
 
         /**
-         * Getter for thread context.
+         * Getter for thread env.
          */
-        sigjmp_buf* getContext();
+        sigjmp_buf *getEnv();
 };
 
 
