@@ -10,6 +10,9 @@
 #include <sys/time.h>
 #include <math.h>
 
+//============================//
+#define DEBUG
+//============================//
 
 #define ENV_SAVE_CODE 0
 #define ENV_LOAD_CODE 1
@@ -24,7 +27,8 @@ int total_quanta = 1;   // Quantum counter for all threads in total.
 sigset_t signal_set;    // Signal set used for signal masking.
 
 // TODO - Check if these need be global.
-itimerval tv;     // Saves the timer interval
+struct sigaction sa = {0};
+struct itimerval tv;     // Saves the timer interval
 
 
 //////////////////////////////////
@@ -76,6 +80,9 @@ int remove_from_ready_queue(int tid)
  */
 void block_timer()
 {
+#ifdef DEBUG
+    std::cout << "blocking timer\n";
+#endif
     if (sigprocmask(SIG_BLOCK, &signal_set, NULL) == FAIL_CODE)
     {
         std::cerr << SYS_ERROR_MSG << "failed to block signal set.\n";
@@ -89,6 +96,9 @@ void block_timer()
  */
 void unblock_timer()
 {
+#ifdef DEBUG
+    std::cout << "unblocking timer\n";
+#endif
     if (sigprocmask(SIG_UNBLOCK, &signal_set, NULL) == FAIL_CODE)
     {
         std::cerr << SYS_ERROR_MSG << "failed to unblock signal set.\n";
@@ -102,6 +112,9 @@ void unblock_timer()
  */
 void reset_timer()
 {
+#ifdef DEBUG
+    std::cout << "resetting timer\n";
+#endif
     if (setitimer(ITIMER_VIRTUAL, &tv, NULL) == FAIL_CODE)
     {
         std::cerr << SYS_ERROR_MSG << "failed to reset virtual timer.\n";
@@ -118,6 +131,9 @@ void init_timer(int quantum_usecs)
 {
     int seconds = floor(quantum_usecs/SEC_TO_MICROSECS);
     int usecs = quantum_usecs - seconds*SEC_TO_MICROSECS;
+#ifdef DEBUG
+    std::cout << "initiating timer with " << seconds << " secs and " << usecs << " microsecs\n";
+#endif
     tv.it_value.tv_sec = seconds;
     tv.it_value.tv_usec = usecs;
     tv.it_interval.tv_sec = seconds;
@@ -133,6 +149,9 @@ void init_timer(int quantum_usecs)
  */
 void switch_thread()
 {
+#ifdef DEBUG
+    std::cout << "switching threads\n";
+#endif
     int next;
     if (readyQueue.empty())
     {
@@ -158,6 +177,9 @@ void switch_thread()
  */
 void timer_handler(int signum)
 {
+#ifdef DEBUG
+    std::cout << "handling alarm signal\n";
+#endif
     threads[runningThread]->setState(READY);
     readyQueue.push_back(runningThread);
     int ret_val = sigsetjmp(*(threads[runningThread]->getEnv()), 1);
@@ -225,7 +247,6 @@ int uthread_init(int quantum_usecs)
     runningThread = 0;
 
     // Set timer_handler to handle timer signals.
-    struct sigaction sa;
     sa.sa_handler = &timer_handler;
     if (sigaction(SIGVTALRM, &sa, NULL) < 0) {
         std::cerr << SYS_ERROR_MSG << "failed to set signal action handler.\n";
@@ -254,6 +275,9 @@ int uthread_init(int quantum_usecs)
 int uthread_spawn(void (*f)(void))
 {
     block_timer();
+#ifdef DEBUG
+    std::cout << "spawning thread\n";
+#endif
     for (int i=0; i<MAX_THREAD_NUM; i++)
     {
         if (threads[i] == nullptr)

@@ -3,14 +3,21 @@
 //
 #include "uthreads.h"
 #include <stdlib.h>
+#include <unistd.h>
 #include <iostream>
 
 
 void f1()
 {
+    int i = 0;
     while (true)
-    {}
+    {
+        usleep(1000000);
+        std::cout << i << "\n";
+        i++;
+    }
 }
+
 
 void print(int a)
 {
@@ -51,7 +58,38 @@ int test_block_and_resume()
 }
 
 
+int test_basic_timer_use()
+{
+    uthread_init(3000000);
+    usleep(2000000);
+    print_thread_status();
+    usleep(2000000);
+    uthread_spawn(f1);
+    usleep(2000000);
+    print_thread_status();
+    usleep(2000000);
+    print_thread_status();
+    usleep(2000000);
+    print_thread_status();
+    usleep(2000000);
+    uthread_spawn(f1);
+    usleep(2000000);
+    print_thread_status();
+    usleep(2000000);
+    print_thread_status();
+    usleep(2000000);
+    print_thread_status();
+    usleep(2000000);
+    print_thread_status();
+    usleep(2000000);
+    print_thread_status();
+    usleep(2000000);
+    print_thread_status();
+    return 0;
+}
+
+
 int main()
 {
-    test_block_and_resume();
+    test_basic_timer_use();
 }
