@@ -409,7 +409,7 @@ int uthread_get_quantums(int tid)
 {
     if (!is_tid_valid(tid))
     {
-        std::cerr << LIB_ERROR_MSG << "no such thread.\n";
+        // Error printed by is_tid_valid.
         return FAIL_CODE;
     }
     return threads[tid]->get_quantum_count();
