@@ -12,8 +12,10 @@ void f1()
     int i = 0;
     while (true)
     {
-        usleep(1000000);
-        std::cout << i << "\n";
+        if (i%1000000 == 0)
+        {
+            print_thread_status();
+        }
         i++;
     }
 }
@@ -60,31 +62,18 @@ int test_block_and_resume()
 
 int test_basic_timer_use()
 {
-    uthread_init(3000000);
-    usleep(2000000);
+    uthread_init(3000);
     print_thread_status();
-    usleep(2000000);
     uthread_spawn(f1);
-    usleep(2000000);
-    print_thread_status();
-    usleep(2000000);
-    print_thread_status();
-    usleep(2000000);
-    print_thread_status();
-    usleep(2000000);
-    uthread_spawn(f1);
-    usleep(2000000);
-    print_thread_status();
-    usleep(2000000);
-    print_thread_status();
-    usleep(2000000);
-    print_thread_status();
-    usleep(2000000);
-    print_thread_status();
-    usleep(2000000);
-    print_thread_status();
-    usleep(2000000);
-    print_thread_status();
+    int i=0;
+    while(true)
+    {
+        if (i%1000000 == 0)
+        {
+            print_thread_status();
+        }
+        i++;
+    }
     return 0;
 }
 

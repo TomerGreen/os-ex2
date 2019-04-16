@@ -27,7 +27,7 @@ int total_quanta = 1;   // Quantum counter for all threads in total.
 sigset_t signal_set;    // Signal set used for signal masking.
 
 // TODO - Check if these need be global.
-struct sigaction sa = {0};
+struct sigaction sa;
 struct itimerval tv;     // Saves the timer interval
 
 
@@ -288,7 +288,7 @@ int uthread_spawn(void (*f)(void))
             return i;
         }
     }
-    // Maximum number of threads reached.
+    std::cerr << LIB_ERROR_MSG << "max number of threads reached.\n";
     unblock_timer();
     return FAIL_CODE;
 }
@@ -391,4 +391,26 @@ int uthread_resume(int tid)
     unblock_timer();
     //TODO make sure resuming ready/running thread should return 0.
     return SUCCESS_CODE;
+}
+
+
+int uthread_get_tid()
+{
+    return runningThread;
+}
+
+
+int uthread_get_total_quantums()
+{
+    return total_quanta;
+}
+
+int uthread_get_quantums(int tid)
+{
+    if (!is_tid_valid(tid))
+    {
+        std::cerr << LIB_ERROR_MSG << "no such thread.\n";
+        return FAIL_CODE;
+    }
+    return threads[tid]->get_quantum_count();
 }
