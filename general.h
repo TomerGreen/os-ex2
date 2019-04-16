@@ -8,7 +8,6 @@
 #include <setjmp.h>
 #include <signal.h>
 #include <unistd.h>
-#include <sys/time.h>
 
 
 #ifndef OS_EX2_GENERAL_H

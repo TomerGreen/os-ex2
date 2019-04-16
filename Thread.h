@@ -7,7 +7,6 @@
 #include <setjmp.h>
 #include <signal.h>
 #include "general.h"
-#include "uthreads.h"
 
 
 class Thread
@@ -18,6 +17,7 @@ class Thread
         void (*f)(void);
         char *stack;
         sigjmp_buf env;
+        int quantum_count;
 
     public:
 
@@ -60,6 +60,16 @@ class Thread
          * Getter for thread env.
          */
         sigjmp_buf *getEnv();
+
+        /**
+         * Getter for quantum count.
+         */
+        int get_quantum_count();
+
+        /**
+         * Increments the quantum count.
+         */
+        void inc_quantum_count();
 };
 
 

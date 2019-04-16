@@ -1,4 +1,5 @@
 #include "thread.h"
+#include "uthreads.h"
 #include "blackbox.h"
 
 
@@ -16,6 +17,7 @@ Thread::Thread(int id, void (*f)(void)): id(id), f(f)
         std::cerr << SYS_ERROR_MSG << "failed to initialize signal mask set.\n";
         exit(1);
     }
+    quantum_count = 0;
 }
 
 
@@ -23,6 +25,7 @@ Thread::Thread(int id): id(id)
 {
     // No need to call sigsetjmp since this will be done when the main thread is switched for the first time.
     stack = new char[STACK_SIZE];
+    quantum_count = 1;
 }
 
 
@@ -53,4 +56,16 @@ int Thread::getId() const
 sigjmp_buf* Thread::getEnv()
 {
     return &env;
+}
+
+
+int Thread::get_quantum_count()
+{
+    return quantum_count;
+}
+
+
+void Thread::inc_quantum_count()
+{
+    quantum_count++;
 }
